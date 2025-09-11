@@ -1,3 +1,4 @@
+# You can auto-create tags with Release-Please or Semantic-Release in each repo, or keep manual tags on protected main.
 name: Notify central on tag
 on:
   push:
