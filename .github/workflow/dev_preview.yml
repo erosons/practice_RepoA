@@ -1,0 +1,45 @@
+name: DEV Preview (PR)
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency: ${{ github.repository }}-dev-${{ github.head_ref }}  # 1 preview per branch
+
+jobs:
+  dev_preview:
+    runs-on: ubuntu-latest
+    environment: dev                        # uses THIS repo's DEV env secrets/approvals
+    permissions: { contents: read, id-token: write }  # OIDC capable
+    env:
+      STACK: pr-${{ github.event.number }}  # isolate resources per PR via DABs var
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: databricks/setup-cli@v0
+
+      # Choose ONE auth method per platform/env
+      # - uses: azure/login@v2
+      # - uses: aws-actions/configure-aws-credentials@v4
+      # - run: databricks configure --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
+
+      - name: Set DABs variable for isolated preview
+        run: echo "DATABRICKS_BUNDLE_VAR_stack=${STACK}" >> $GITHUB_ENV
+
+      - name: Validate & deploy to DEV
+        run: |
+          databricks bundle validate --target dev
+          databricks bundle deploy   --target dev
+
+      - name: (Optional) Smoke test
+        run: ./tests/smoke.sh dev
+
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@v0
+      - run: |
+          echo "DATABRICKS_BUNDLE_VAR_stack=pr-${{ github.event.number }}" >> $GITHUB_ENV
+          databricks bundle destroy --target dev || true
