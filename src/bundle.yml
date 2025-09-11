@@ -1,0 +1,11 @@
+variables:
+  stack:
+    default: "local"
+targets:
+  dev:
+    workspace:
+      root_path: /Shared/bundles/${bundle.name}/${var.stack}
+    resources:
+      jobs:
+        my_job:
+          name: ${bundle.name}-${var.stack}

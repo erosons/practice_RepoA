@@ -1,0 +1,16 @@
+name: Notify central on tag
+on:
+  push:
+    tags: ['v*.*.*']
+
+jobs:
+  tell_central:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify central
+        env:
+          GH_TOKEN: ${{ secrets.ORG_AUDIT_PAT }}  # PAT with repo:write to central
+        run: |
+          gh api repos/<ORG>/<CENTRAL_REPO>/dispatches \
+            -f event_type=release_ready \
+            -f client_payload='{"repo":"'"${GITHUB_REPOSITORY}"'","version":"'"${GITHUB_REF_NAME}"'"}'

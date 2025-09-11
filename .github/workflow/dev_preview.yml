@@ -1,3 +1,4 @@
+# DEV preview from a PR (feature branch → DEV only)
 name: DEV Preview (PR)
 on:
   pull_request:
