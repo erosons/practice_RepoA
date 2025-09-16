@@ -26,8 +26,8 @@ jobs:
         env:
           # Fine-grained PAT with "Contents: Read" on app repos and "Actions: Read/Write" on the orchestration repo
           ORCHESTRATOR_PAT: ${{ secrets.ORCHESTRATOR_PAT }}
-          ORG: your-gh-org                         # <-- change
-          ORCHESTRATOR_REPO: orchestrator-repo     # <-- change (central repo name)
+          ORG: $${{ vars.orgname}}                        # <-- change
+          ORCHESTRATOR_REPO: $${{vars.orchestrator-repo}}    # <-- change (central repo name)
         run: |
           payload=$(jq -n \
             --arg repo_full_name "${GITHUB_REPOSITORY}" \
