@@ -1,21 +1,10 @@
 bundle:
   name: sample-app-a
 
-resources:
-  jobs:
-    example_job:
-      name: "example-a"
-      tasks:
-        - task_key: run_notebook
-          notebook_task:
-            notebook_path: /Repos/${bundle.target}/example
-          job_cluster_key: single
-      job_clusters:
-        - job_cluster_key: single
-          new_cluster:
-            spark_version: "13.3.x-scala2.12"
-            node_type_id: "Standard_DS3_v2"
-            num_workers: 1
+artifacts:
+  my_job:
+    type: job
+    path: jobs/my_job.yaml
 
 targets:
   dev:

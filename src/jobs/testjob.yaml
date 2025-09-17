@@ -1,0 +1,15 @@
+resources:
+  jobs:
+    my_notebook_job:
+      name: "simple-notebook-job"
+      tasks:
+      - task_key: run_notebook
+        notebook_task:
+          notebook_path: "/Repos/your.name@example.com/my-repo/notebooks/sample_notebook"
+        job_cluster_key: job_cluster
+      job_clusters:
+      - job_cluster_key: job_cluster
+        new_cluster:
+          spark_version: "14.3.x-scala2.12"
+          node_type_id: "Standard_DS3_v2"
+          num_workers: 1
