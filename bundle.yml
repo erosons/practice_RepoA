@@ -1,32 +1,27 @@
-bundle:
-  name: sample-app-a
+# databricks.yml
+# This is the configuration for the Databricks Asset Bundle my-test-bundle.
 
-artifacts:
-  my_job:
-    type: job
-    path: jobs/my_job.yaml
+bundle:
+  name: my_test_bundle
+
+include:
+  - resources/*.yml
 
 targets:
+  # The 'dev' target, used for development purposes. See [_](https://docs.databricks.com/en/dev-tools/bundles/deployment-modes.html#development-mode)
   dev:
+    mode: development
+    default: true
     workspace:
-      host: ${env.DATABRICKS_HOST}
-    run_as:
-      service_principal_name: "spn-dev@example.com"
+      host: https://my-host.cloud.databricks.com
 
-  qa:
-    workspace:
-      host: ${env.DATABRICKS_HOST}
-    run_as:
-      service_principal_name: "spn-qa@example.com"
-
-  uat:
-    workspace:
-      host: ${env.DATABRICKS_HOST}
-    run_as:
-      service_principal_name: "spn-uat@example.com"
-
+  # The 'prod' target, used for production deployment. See [_](https://docs.databricks.com/en/dev-tools/bundles/deployment-modes.html#production-mode)
   prod:
+    mode: production
     workspace:
-      host: ${env.DATABRICKS_HOST}
+      host: https://my-host.cloud.databricks.com
+      root_path: /Shared/.bundle/prod/${bundle.name}
     run_as:
-      service_principal_name: "spn-prod@example.com"
+      # This runs as someone@example.com in production. Alternatively,
+      # a service principal could be used here using service_principal_name
+      user_name: someone@example.com
