@@ -22,7 +22,7 @@ jobs:
           echo "type=promote" >> $GITHUB_OUTPUT
         fi
 
-    - name: Send repository_dispatch to orchestrator
+    - name: Send events to repository_dispatch for orchestration
       env:
         # Fine-grained PAT with "Contents: Read" on app repos and "Actions: Read/Write" on the orchestration repo
         ORCHESTRATOR_PAT: ${{ secrets.ORCHESTRATOR_PAT }}
